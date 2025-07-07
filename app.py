@@ -124,8 +124,19 @@ img_file = st.file_uploader("Carica una foto", type=["jpg", "jpeg", "png"])
 
 # ==== Elaborazione ====
 if img_file is not None:
-    # --- Step 1: Carica immagine ---
-    pil_img = Image.open(img_file).convert("RGB")
+    try:
+        pil_img = Image.open(img_file).convert("RGB")
+    except Exception as e:
+        st.error(f"Errore nel caricamento dell'immagine: {e}")
+        st.stop()
+
+    # 🔁 Conversione a JPEG (in memoria)
+    import io
+    buf = io.BytesIO()
+    pil_img.save(buf, format='JPEG')
+    buf.seek(0)
+    pil_img = Image.open(buf).convert("RGB")
+
     img_rgb = np.array(pil_img)
     img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
 
