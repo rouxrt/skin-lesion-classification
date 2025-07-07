@@ -137,6 +137,9 @@ if img_file is not None:
     buf.seek(0)
     pil_img = Image.open(buf).convert("RGB")
 
+    max_size = (224, 224)  # o (256, 256) per test
+    img = img.resize(max_size)
+
     img_rgb = np.array(pil_img)
     img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
 
